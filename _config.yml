@@ -96,11 +96,11 @@ service-worker: true
 # Friends
 friends: [
     {
-        title: "WY",
-        href: "http://zhengwuyang.com"
+        title: "Google",
+        href: "https://google.com"
     },{
-        title: "简书·BY",
-        href: "http://www.jianshu.com/u/e71990ada2fd"
+        title: "CSDN",
+        href: "https://www.csdn.net"
     },{
         title: "Apple",
         href: "https://apple.com"
