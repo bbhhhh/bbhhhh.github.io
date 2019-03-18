@@ -47,6 +47,7 @@ MapReduce任务有两个参数可以控制Speculative Task：
 hadoop2.0版本中这两个参数改为：
 
 `mapreduce.map.speculative`
+
 `mapreduce.reduce.speculative`
 
 
