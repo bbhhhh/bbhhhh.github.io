@@ -39,24 +39,24 @@ tags:
 
 MapReduce任务有两个参数可以控制Speculative Task：
 
-'mapred.map.tasks.speculative.execution'： mapper阶段是否开启推测执行
-'mapred.reduce.tasks.speculative.execution'： reducer阶段是否开启推测执行
+`mapred.map.tasks.speculative.execution`： mapper阶段是否开启推测执行
+`mapred.reduce.tasks.speculative.execution`： reducer阶段是否开启推测执行
 
 这两个参数默认都为true
 
 hadoop2.0版本中这两个参数改为：
 
-'mapreduce.map.speculative'
-'mapreduce.reduce.speculative'
+`mapreduce.map.speculative`
+`mapreduce.reduce.speculative`
 
 
 java 应用可以通过如下语句关闭speculative task：
 
-'conf.setBoolean("mapreduce.map.speculative", false);'
-'conf.setBoolean("mapreduce.reduce.speculative", false);'
+`conf.setBoolean("mapreduce.map.speculative", false);`
+`conf.setBoolean("mapreduce.reduce.speculative", false);`
 
 或直接修改mapred-site.xml，如下：
-'
+```
 <property>
   <name>mapreduce.map.speculative</name>
   <value>false</value>
@@ -65,7 +65,7 @@ java 应用可以通过如下语句关闭speculative task：
   <name>mapreduce.reduce.speculative</name>
   <value>false</value>
 </property>
-'
+```
 
 经过修改，再次测试100GB文件，一切正常。
 
