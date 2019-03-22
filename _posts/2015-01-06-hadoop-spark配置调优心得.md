@@ -28,14 +28,14 @@ slave5         60G ram,24 vCore
 ### Spark配置说明  
 声明：以下spark配置都只需要在master节点上配置，不需要同步到slave节点上，一样生效。  
   
-- Spark-env.sh
+#### - Spark-env.sh
 
   - 先来看spark on yarn 模式  
 ```
-#Options read in YARN client mode  
-#- SPARK_EXECUTOR_INSTANCES, Number ofworkers to start (Default: 2)  
-#- SPARK_EXECUTOR_CORES, Number of coresfor the workers (Default: 1).  
-#- SPARK_EXECUTOR_MEMORY, Memory perWorker (e.g. 1000M, 2G) (Default: 1G)
+ #Options read in YARN client mode  
+ #- SPARK_EXECUTOR_INSTANCES, Number ofworkers to start (Default: 2)  
+ #- SPARK_EXECUTOR_CORES, Number of coresfor the workers (Default: 1).  
+ #- SPARK_EXECUTOR_MEMORY, Memory perWorker (e.g. 1000M, 2G) (Default: 1G)
 ```
   1. SPARK_EXECUTOR_INSTANCES 这个参数配在这里不起任何作用， 如果要指定executor的个数，可以通过spark-submit–num-executors 这个参数来动态指定，比修改配置文件来的方便。 
   2. SPARK_EXECUTOR_INSTANCES 这个参数的默认值是1， 配置文件中的注释是错的。 
@@ -71,7 +71,7 @@ slave5         60G ram,24 vCore
    –num-executors 64 –executor-memory 2G   
 
  
-- spark-defaults.conf  
+#### - spark-defaults.conf  
 
 该文件主要是配置log和history，内容如下：  
 ```
@@ -82,7 +82,7 @@ spark.yarn.historyServer.address   master:18080
 
 奇怪的是在http://master:18080下只能看到笔者在sparkon yarn-cluster模式下运行的记录，其他spark standalone和spark on yarn-client的运行记录都看不到，不知道原因何在，若有高手知道望赐教，谢谢。
 
-- slaves
+#### - slaves
 
 列出spark standalone模式下所有节点的主机名（不是ip地址）。  
 
@@ -98,7 +98,7 @@ spark.yarn.historyServer.address   master:18080
   Hadoop的配置不同于spark，有的需要在master上配，有的需要在slave上配。  
   归纳：master上负责每个container最多能使用的资源数量。而slave上负责本节点最多能提供的资源数量。前者必须小于后者。 
 
-- yarn-site.xml 
+#### - yarn-site.xml 
   - 在master节点上  
 ```
       <property>  
@@ -130,7 +130,7 @@ spark.yarn.historyServer.address   master:18080
   yarn.scheduler.maximum-allocation-vcores节点上分配个每个container的cpu核数，必须小于yarn.nodemanager.resource.cpu-vcores 最小的那个节点。
 
  
-  - 在salve节点上  
+ #### - 在salve节点上  
    以上在master节点配的4个参数你即使配到slave上也不起作用。Slave上关键的参数是下面2个：  
 ```
          <property>  
@@ -149,7 +149,7 @@ spark.yarn.historyServer.address   master:18080
 
   这2个参数值每个节点根据节点实际硬件情况定。  
 
- - mapred-site.xml  
+ #### - mapred-site.xml  
    - 在master节点上  
 ```
     <property>  
