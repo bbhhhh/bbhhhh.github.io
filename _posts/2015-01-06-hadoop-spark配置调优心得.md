@@ -129,9 +129,8 @@ spark.yarn.historyServer.address   master:18080
 
   yarn.scheduler.maximum-allocation-vcores节点上分配个每个container的cpu核数，必须小于yarn.nodemanager.resource.cpu-vcores 最小的那个节点。
 
- 
- #### - 在salve节点上  
-   以上在master节点配的4个参数你即使配到slave上也不起作用。Slave上关键的参数是下面2个：  
+  - 在salve节点上    
+   以上在master节点配的4个参数你即使配到slave上也不起作用。Slave上关键的参数是下面2个：    
 ```
          <property>  
                 <name>yarn.nodemanager.resource.cpu-vcores</name>  
@@ -149,7 +148,7 @@ spark.yarn.historyServer.address   master:18080
 
   这2个参数值每个节点根据节点实际硬件情况定。  
 
- #### - mapred-site.xml  
+#### - mapred-site.xml  
    - 在master节点上  
 ```
     <property>  
@@ -183,6 +182,5 @@ spark.yarn.historyServer.address   master:18080
   mapreduce.reduce.memory.mb每个reduce任务的内存量，不能超过-Xmx值。  
   mapreduce.reduce.cpu.vcores每个reduce任务的cpu核数，不能超过master上的yarn.scheduler.maximum-allocation-vcores
 
- 
-  - 在salve节点上  
+  - 在salve节点上    
    除了不需要配置以上master的5个参数，其他与master一致即可。
