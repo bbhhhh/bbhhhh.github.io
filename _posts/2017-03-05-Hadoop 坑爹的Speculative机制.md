@@ -45,9 +45,7 @@ MapReduce任务有两个参数可以控制Speculative Task：
 这两个参数默认都为true
 
 hadoop2.0版本中这两个参数改为：
-
 `mapreduce.map.speculative`
-
 `mapreduce.reduce.speculative`
 
 
@@ -69,7 +67,6 @@ java 应用可以通过如下语句关闭speculative task：
 ```
 
 经过修改，再次测试100GB文件，一切正常。
-
 
 
 因此，当这两属性为True时，编写mapreduce程序要特别小心，尤其访问外部资源如数据库，写文件等，很容易发生重复写，产生异常。同时又额外消耗了节点资源。
