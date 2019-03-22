@@ -4,7 +4,7 @@ title:      关于Eclipse 中用Ant编译Java程序的JDK环境设置问题
 subtitle:   
 date:       2014-08-26
 author:     BHH
-header-img: img/post-bg-re-vs-ng2.jpg
+header-img: img/post-bg-keybord.jpg
 catalog: true
 tags:
     - Eclipse

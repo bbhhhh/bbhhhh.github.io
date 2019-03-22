@@ -4,7 +4,7 @@ title:      HBase 学习一 客户端写缓冲区 autoFlush
 subtitle:   
 date:       2014-08-28
 author:     BHH
-header-img: img/post-bg-re-vs-ng2.jpg
+header-img: img/post-bg-e2e-ux.jpg
 catalog: true
 tags:
     - HBase

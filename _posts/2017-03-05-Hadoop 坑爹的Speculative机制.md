@@ -4,7 +4,7 @@ title:      Hadoop 坑爹的Speculative 机制
 subtitle:   
 date:       2017-03-05
 author:     BHH
-header-img: img/post-bg-cook.jpg
+header-img: img/post-bg-github-cup.jpg
 catalog: true
 tags:
     - Hadoop

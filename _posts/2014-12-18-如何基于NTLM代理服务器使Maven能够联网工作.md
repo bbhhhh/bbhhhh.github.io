@@ -4,7 +4,7 @@ title:      如何基于NTLM代理服务器使Maven能够联网工作
 subtitle:   
 date:       2014-12-18
 author:     BHH
-header-img: img/post-bg-re-vs-ng2.jpg
+header-img: img/post-bg-digital-native.jpg
 catalog: true
 tags:
     - NTLM
