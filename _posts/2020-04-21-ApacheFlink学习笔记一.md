@@ -84,7 +84,7 @@ env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);  // 设置Stream�
 
   首先，当 `env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);` 时，表示Flink按照EventTime进行stream处理，此时必须调用 `assignTimestampsAndWatermarks（）`，用来分配一个EventTime抽取方法和WaterMark计算方法。
   
- #### 实现一：周期性的根据系统时间计算watermark的内部类:
+ ### 实现一：周期性的根据系统时间计算watermark的内部类:
      
 ```
 private static class MyAssignerWithPeriodicWatermarks implements AssignerWithPeriodicWatermarks<Tuple4<Long, String, String, Integer>> {
@@ -127,7 +127,7 @@ private static class MyAssignerWithPeriodicWatermarks implements AssignerWithPer
   4. 假设e(14)以后流中断或结束了，但系统时间始终在走，当走到T(18)时， watermark为wt(15)，大于等于w(15)，w[10-15)窗口关闭条件满足，w(15)关闭并对e(12), e(14)开始计算。
 
  
-  #### 实现二：根据EventTime计算watermark的内部类
+  ### 实现二：根据EventTime计算watermark的内部类
    
 ```
     private static class MyBoundedOutOfOrdernessTimestampExtractor
