@@ -165,7 +165,7 @@ private static class MyAssignerWithPeriodicWatermarks implements AssignerWithPer
 5. 由于e(14)以后流中断了，再没有新的event到达，因此watermark不会更新，始终停留在wt(11)，从而窗口w[10-15)始终无法满足关闭条件，对e(12),e(14)的计算也就始终无法开始，除非收到新的event事件。
 
 
-*虽然实现二能解决乱序Event问题，但是这个取决于maxOutOfOrderness阈值的大小，根据上图，如果该值设为1s的话，当收到e(6)时，watermark将会更新为wt(5)，满足窗口w[0-5)关闭条件， e(6)事件仍然会被丢弃。所以该阈值的大小设置取决于经验值，但又不能设置的过大以防止窗口等待时间过长数据积压严重导致处理性能下降。*
+*虽然实现二能解决乱序Event问题，但是这个取决于maxOutOfOrderness阈值的大小，根据上图，如果该值设为1s的话，当收到e(6)时，watermark将会更新为wt(5)，满足窗口w[0-5)关闭条件， e(4)事件仍然会被丢弃。所以该阈值的大小设置取决于经验值，但又不能设置的过大以防止窗口等待时间过长数据积压严重导致处理性能下降。*
 
 
 
