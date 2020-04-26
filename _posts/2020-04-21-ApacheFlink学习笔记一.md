@@ -29,47 +29,45 @@ tags:
 
 
 下面上代码以便更深入的理解这些概念：
-
-	
-	public static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");  
-	public static final Time MAX_OUT_OF_ORDERNESS = Time.seconds(3); // EventTime延迟3s作为watermark  
-	public static final Time MAX_WATERMARK_DELAY = Time.seconds(3);  // 系统时间延迟3s作为watermark   
-	public static final Time TIME_WINDOW_SIZE = Time.seconds(5); // 5s间隔的window
-	
-	public static void main(String... args) {  
-	
-	Properties kafkaProps = (Properties) KafkaConfig.getInstance().getKafkaProps().clone();  
-	kafkaProps.put(ConsumerConfig.GROUP_ID_CONFIG, this.getClass().getSimpleName());  
-	
-	StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-	env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);  // 设置Stream处理的Time属性，默认是ProcessingTime
-	
-	   // stream source event format: JSON Node
-	   // mapped stream event format: Tuple4<time in millsecs, time in readable string, deviceid, number>
-	   SingleOutputStreamOperator<Tuple4<Long, String, String, Integer>dataStream = env
-	      .addSource(new FlinkKafkaConsumer<>(this.topic, new JsonNodeDeserializationSchema(), kafkaProps))
-	     .map(new MyMapFunc()) // transform JSON node to Tuple4<>
-	
-	// 根据Event Time计算watermark
-	//.assignTimestampsAndWatermarks(new MyBoundedOutOfOrdernessTimestampExtractor(MAX_OUT_OF_ORDERNESS))
-	
-	// 根据processing time (系统时间）计算watermark
-	.assignTimestampsAndWatermarks(new MyAssignerWithPeriodicWatermarks())
-	
-	.keyBy(2) // key by deviceid
-	.timeWindow(TIME_WINDOW_SIZE)  // 5s间隔设置windown
-	.reduce(new MyReduceFunc())  
-	
-	 dataStream.print();
-	
-	      try {
-	            env.execute("print low optical power device event.");
-	      } catch (Exception e) {
-	            logger.error(e.getMessage(), e);
-	     }
-	  }
-	
-
+```java
+     public static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");  
+     public static final Time MAX_OUT_OF_ORDERNESS = Time.seconds(3); // EventTime延迟3s作为watermark  
+     public static final Time MAX_WATERMARK_DELAY = Time.seconds(3);  // 系统时间延迟3s作为watermark   
+     public static final Time TIME_WINDOW_SIZE = Time.seconds(5); // 5s间隔的window
+     
+     public static void main(String... args) {  
+     
+     Properties kafkaProps = (Properties) KafkaConfig.getInstance().getKafkaProps().clone();  
+     kafkaProps.put(ConsumerConfig.GROUP_ID_CONFIG, this.getClass().getSimpleName());  
+     
+     StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+     env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);  // 设置Stream处理的Time属性，默认是ProcessingTime
+     
+        // stream source event format: JSON Node
+        // mapped stream event format: Tuple4<time in millsecs, time in readable string, deviceid, number>
+        SingleOutputStreamOperator<Tuple4<Long, String, String, Integer>dataStream = env
+       .addSource(new FlinkKafkaConsumer<>(this.topic, new JsonNodeDeserializationSchema(), kafkaProps))
+      .map(new MyMapFunc()) // transform JSON node to Tuple4<>
+     
+     // 根据Event Time计算watermark
+     //.assignTimestampsAndWatermarks(new MyBoundedOutOfOrdernessTimestampExtractor(MAX_OUT_OF_ORDERNESS))
+     
+     // 根据processing time (系统时间）计算watermark
+     .assignTimestampsAndWatermarks(new MyAssignerWithPeriodicWatermarks())
+     
+     .keyBy(2) // key by deviceid
+     .timeWindow(TIME_WINDOW_SIZE)  // 5s间隔设置windown
+     .reduce(new MyReduceFunc())  
+     
+      dataStream.print();
+     
+       try {
+     env.execute("print low optical power device event.");
+       } catch (Exception e) {
+     logger.error(e.getMessage(), e);
+      }
+   }
+```
 
 上述代码大致完成的功能包括：
    
@@ -85,29 +83,29 @@ tags:
   首先，当 `env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);` 时，表示Flink按照EventTime进行stream处理，此时必须调用 `assignTimestampsAndWatermarks（）`，用来分配一个EventTime抽取方法和WaterMark计算方法。
   
 #### 实现一：周期性的根据系统时间计算watermark的内部类 ####
-  
-	private static class MyAssignerWithPeriodicWatermarks implements AssignerWithPeriodicWatermarks<Tuple4<Long, String, String, Integer>> {
-	  private static final long serialVersionUID = 1L;
-	
-	    @Override
-	   /**
-	   *  Tuple4<>中的第1个元素表示event time
-	   */
-	  public long extractTimestamp(Tuple4<Long, String, String, Integer> element, long previousElementTimestamp) {
-	    return element.f0;
-	  }
-	
-	    /**
-	    * watermark time的生成依赖于系统时间，因此watermark time始终会保持更新并触发window关闭，因此即使stream中断或关闭，
-	    * 最后收到的event只要在window关闭前到达，就会被计算在内。
-	   */
-	   @Override
-	   public Watermark getCurrentWatermark() {
-	        return new Watermark(System.currentTimeMillis() - MAX_WATERMARK_DELAY.toMilliseconds());
-	   }
-	
-	}
-
+```java
+    private static class MyAssignerWithPeriodicWatermarks implements AssignerWithPeriodicWatermarks<Tuple4<Long, String, String, Integer>> {
+      private static final long serialVersionUID = 1L;
+    
+        @Override
+       /**
+       *  Tuple4<>中的第1个元素表示event time
+       */
+      public long extractTimestamp(Tuple4<Long, String, String, Integer> element, long previousElementTimestamp) {
+        return element.f0;
+      }
+    
+        /**
+        * watermark time的生成依赖于系统时间，因此watermark time始终会保持更新并触发window关闭，因此即使stream中断或关闭，
+        * 最后收到的event只要在window关闭前到达，就会被计算在内。
+       */
+       @Override
+       public Watermark getCurrentWatermark() {
+            return new Watermark(System.currentTimeMillis() - MAX_WATERMARK_DELAY.toMilliseconds());
+       }
+    
+    }
+```
    该内部类中第二个方法根据系统当前时间延迟3s计算watermark时间。实现一举例有如下event stream：
      
   ![](https://bbhhhh.github.io/img/flink-20200424111935.png)
@@ -126,24 +124,24 @@ tags:
 
  
 #### 实现二：根据EventTime计算watermark的内部类 ####
-   
-	    private static class MyBoundedOutOfOrdernessTimestampExtractor
-	            extends BoundedOutOfOrdernessTimestampExtractor<Tuple4<Long, String, String, Integer>> {
-	
-	        public MyBoundedOutOfOrdernessTimestampExtractor(Time maxOutOfOrderness) {
-	            super(maxOutOfOrderness);
-	        }
-	
-	        /**
-	         *extract event time from Tuple<eventtime in long, eventtime in string, deviceid,count>.f0 
-	         */
-	        @Override
-	        public long extractTimestamp(Tuple4<Long, String, String, Integer> element) {
-	            return element.f0;
-	        }
-	
-	    }
-
+```java
+        private static class MyBoundedOutOfOrdernessTimestampExtractor
+                extends BoundedOutOfOrdernessTimestampExtractor<Tuple4<Long, String, String, Integer>> {
+    
+            public MyBoundedOutOfOrdernessTimestampExtractor(Time maxOutOfOrderness) {
+                super(maxOutOfOrderness);
+            }
+    
+            /**
+             *extract event time from Tuple<eventtime in long, eventtime in string, deviceid,count>.f0 
+             */
+            @Override
+            public long extractTimestamp(Tuple4<Long, String, String, Integer> element) {
+                return element.f0;
+            }
+    
+        }
+```
    该内部类继承了Flink内置的BoundedOutOfOrdernessTimestampExtractor类，该父类提供了一个用于防止Event乱序到达的watermark默认实现。子类必须实现extractTimestamp()方法。默认的watermark算法是根据收到的Event的最大EventTime延迟maxOutOfOrderness秒计算watermark。本例中maxOutOfOrderness设为3s。实现二举例有如下event stream：
 
 ![](https://bbhhhh.github.io/img/flink-20200424112016.png)
