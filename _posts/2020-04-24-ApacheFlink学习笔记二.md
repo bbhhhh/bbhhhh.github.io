@@ -24,19 +24,19 @@ tags:
 3. 让用户更加专注于业务逻辑而非数据流的底层处理逻辑。
 
 虽然官方的愿望很好，但是从这段时间实际使用下来的情况看，Table/SQL API还不成熟，相当功能不完善甚至存在很多bug。具体示例如下：
-
+```json
 	JSON数据样例如下:
 	{
-	   "actualTime": 1576654809133,
-          "deviceInfo": { "deviceId": "CIOT04E86088" },
-	   "ponInfo": {"PONRXPower": 81}
+           "actualTime": 1576654809133,
+           "deviceInfo": { "deviceId": "CIOT04E86088" },
+           "ponInfo": {"PONRXPower": 81}
 	}
 	
 	"actualTime"是毫秒单位的时间戳，可以视为eventtime。
-
+```
 
 ####  通过Table Schema API读取上述数据关键代码如下：
-	
+```java
         StreamExecutionEnvironment bsEnv = StreamExecutionEnvironment.getExecutionEnvironment();
         bsEnv.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
 
@@ -87,7 +87,7 @@ tags:
                 .withSchema(tableSchema)
                 .inAppendMode()
                 .createTemporaryTable("rxpower_detail");
-
+```
 	
 运行上述代码，会得到以下Exception：  
 ```java
@@ -103,13 +103,14 @@ Exception in thread "main" org.apache.flink.table.api.TableException: Window agg
 
 ####  通过Table DDL API读取上述数据关键代码如下：
 * 如果DDL语句这样写：
+```java
         String createTable = "CREATE TABLE rxpower_detail (\n" +
                 "  actualTime TIMESTAMP(3),\n"
                 + " deviceInfo ROW(deviceId string), \n" +
                 " ponInfo ROW(PONRXPower DECIMAL(38,18)), \n"
                 + " WATERMARK FOR actualTime AS actualTime - INTERVAL '5' SECOND \n" +
                 ") ";	
-	
+```
 运行后会得到以下Exception：  
 ```java
 Exception in thread "main" org.apache.flink.table.api.ValidationException: Type TIMESTAMP(3) *ROWTIME* of table field 'actualTime' does not match with the physical type LEGACY('DECIMAL', 'DECIMAL') of the 'actualTime' field of the TableSource return type.
@@ -119,13 +120,14 @@ Exception in thread "main" org.apache.flink.table.api.ValidationException: Type 
 是说DDL定义的类型与原始JSON类型不匹配。
 
 * 但如果DDL语句这样写：
+```java
         String createTable = "CREATE TABLE rxpower_detail (\n" +
                 "  actualTime DECIMAL(38,18),\n"
                 + " deviceInfo ROW(deviceId string), \n" +
                 " ponInfo ROW(PONRXPower DECIMAL(38,18)), \n"
                 + " WATERMARK FOR actualTime AS actualTime - INTERVAL '5' SECOND \n" +
                 ") ";	
-	
+```
 运行后又会得到以下Exception：  
 ```java
  org.apache.calcite.runtime.CalciteContextException: From line 5, column 30 to line 5, column 61: Cannot apply '-' to arguments of type '<DECIMAL(38, 18)> - <INTERVAL SECOND>'. Supported form(s): '<NUMERIC> - <NUMERIC>'
@@ -136,6 +138,7 @@ Exception in thread "main" org.apache.flink.table.api.ValidationException: Type 
 是说不支持对DECIMAL类型进行时间操作。
 
 * 无奈DDL语句只能这样写：
+```java
         String createTable = "CREATE TABLE rxpower_detail (\n" +
                 "  actualTime DECIMAL(38,18),\n"
                 + " rowtime as TO_TIMESTAMP(FROM_UNIXTIME(cast(actualTime as INTEGER))) ,\n"
@@ -143,7 +146,7 @@ Exception in thread "main" org.apache.flink.table.api.ValidationException: Type 
                 " ponInfo ROW(PONRXPower DECIMAL(38,18)), \n"
                 + " WATERMARK FOR rowtime AS rowtime - INTERVAL '5' SECOND \n" +
                 ") ";	
-	
+```
 额外的增加一个rowtime 字段，值从actualTime字段通过函数转换成TIMESTAMP类型，然后在rowtime这个字段上进行window操作，虽然时间字段的问题解决了，但是运行后又出现以下Exception：  
 ```java
   org.apache.flink.table.api.ValidationException: Type ROW<`PONRXPower` DECIMAL(38, 18)> of table field 'ponInfo' does not match with the physical type ROW<`PONRXPower` LEGACY('DECIMAL', 'DECIMAL')> of the 'ponInfo' field of the TableSource return type.
