@@ -26,11 +26,11 @@ tags:
 虽然官方的愿望很好，但是从这段时间实际使用下来的情况看，Table/SQL API还不成熟，相当功能不完善甚至存在很多bug。具体示例如下：
 * JSON数据样例如下,	"actualTime"是毫秒单位的时间戳，可以视为eventtime。
 ```json
-	{
+   {
            "actualTime": 1576654809133,
            "deviceInfo": { "deviceId": "CIOT04E86088" },
            "ponInfo": {"PONRXPower": 81}
-	}
+   }
 ```
 
 ####  通过Table Schema API读取上述数据关键代码如下：   
