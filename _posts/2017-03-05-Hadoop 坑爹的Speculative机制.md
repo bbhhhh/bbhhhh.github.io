@@ -52,7 +52,7 @@ java 应用可以通过如下语句关闭speculative task：
 `conf.setBoolean("mapreduce.reduce.speculative", false);`
 
 或直接修改mapred-site.xml，如下：
-```
+```xml
 <property>
   <name>mapreduce.map.speculative</name>
   <value>false</value>

@@ -18,7 +18,7 @@ HBase的表操作，默认情况下客户端写缓冲区是关闭的，即table.
 
 
 下面是一个简单的关于autoFlush的测试代码：
-```
+```java
 public static void autoFlushTest(){
 		HTable table;
 		
