@@ -33,8 +33,7 @@ tags:
 	}
 	
 	"actualTime"是毫秒单位的时间戳，可以视为eventtime。
-	“PONRXPower"是接收光功率。
-	”deviceId"是设备id 
+
 
 ####  通过Table Schema API读取上述数据关键代码如下：
 	
