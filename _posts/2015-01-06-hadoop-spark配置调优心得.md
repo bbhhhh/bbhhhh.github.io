@@ -100,7 +100,7 @@ spark.yarn.historyServer.address   master:18080
 
 #### - yarn-site.xml 
   - 在master节点上  
-```
+```xml
       <property>  
             <name>yarn.scheduler.minimum-allocation-mb</name>  
              <value>256</value>  
@@ -131,7 +131,7 @@ spark.yarn.historyServer.address   master:18080
 
   - 在salve节点上    
    以上在master节点配的4个参数你即使配到slave上也不起作用。Slave上关键的参数是下面2个：    
-```
+```xml
          <property>  
                 <name>yarn.nodemanager.resource.cpu-vcores</name>  
                  <value>32</value>  
@@ -150,7 +150,7 @@ spark.yarn.historyServer.address   master:18080
 
 #### - mapred-site.xml  
    - 在master节点上  
-```
+```xml
     <property>  
        <name>mapred.child.java.opts</name>  
         <value>-Xmx8192m</value>  
