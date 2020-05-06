@@ -36,7 +36,7 @@ WireShark 抓包:
 
 ![](https://bbhhhh.github.io/img/apache2.2.14-KeepAliveOn.png)
 
-从WireShark抓包看到，Server在收到请求后回复401，且没有关闭TCP连接，后续的HTTP请求仍然复用了该TCP连接。
+从WireShark抓包看到，Server在收到客户端要求`Connection: Keep-Alive`请求后也回复了`Connection: Keep-Alive`, 回复了401后并没有关闭TCP连接，后续的HTTP请求仍然复用了该TCP连接。该环境下，所有终端都能够完成HTTP认证session，应用表现正常。
 
 
 
