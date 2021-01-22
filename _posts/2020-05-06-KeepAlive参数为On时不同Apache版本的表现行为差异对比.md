@@ -7,7 +7,8 @@ author:     BHH
 header-img: img/post-bg-e2e-ux.jpg
 catalog: true
 tags:
-    - HTTP, Apache
+    - HTTP
+    - Apache
 ---
 
 ### KeepAlive参数为On时不同Apache版本的表现行为差异对比
