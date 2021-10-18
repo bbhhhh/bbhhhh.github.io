@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      ApacheFlink学习笔记三
+title:      ApacheFlink学习笔记四
 subtitle:   
 date:       2021-10-18
 author:     BHH
@@ -11,7 +11,7 @@ tags:
      - Flink
 ---
 
-### Flink TableAPI Over聚合操作碰到的问题 ###
+### Flink TableAPI Over Aggregation操作碰到的问题 ###
 
 最近在学习Flink TableAPI Over聚合操作时又碰到了奇怪的问题，在Flink1.13.2版本上，当Order By字段是TIMESTAMP_LTZ类型时，会抛错；但如果是TIMESTAMP类型时就是正常的。
 
