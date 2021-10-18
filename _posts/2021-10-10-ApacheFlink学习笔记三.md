@@ -11,10 +11,10 @@ tags:
      - Flink
 ---
 
-### 使用Flink1.14.0 TableAPI对EventTime进行Window操作碰到的问题 ###
+### 使用Flink1.14.0 TableAPI对EventTime进行Window操作时碰到的问题 ###
 
 最近有空又开始继续研究Flink了，直接上最新的稳定版1.14.0，没想到出师不利，在使用TableAPI进行Window聚合操作时碰到以下问题：
-如果用EventTime进行Window操作，转换成DataStream后调用print()方法控制到没有任何输出；但改成ProcessingTime进行Window操作却一切正常。
+如果用EventTime进行Window操作，转换成DataStream后调用print()方法，控制台没有任何输出；但改成ProcessingTime进行Window操作却一切正常。
 
 使用DataStream API对EventTime进行Window操作也是正常的，百思不得其解。
 
