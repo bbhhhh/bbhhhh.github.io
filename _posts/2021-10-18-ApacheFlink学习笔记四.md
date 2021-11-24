@@ -15,7 +15,6 @@ tags:
 
 ###### !!! updated by 2021.11.24
 ###### 证实了，本文描述的时间类型问题确实是Flink的bug，在1.13.3和1.14.0中已经解决了，特地修改一下。
-
 ###### !!!
 
 最近在学习Flink TableAPI Over聚合操作时又碰到了奇怪的问题，在Flink1.13.2版本上，当Order By字段是TIMESTAMP_LTZ类型时，会抛错；但如果是TIMESTAMP类型时就是正常的。
