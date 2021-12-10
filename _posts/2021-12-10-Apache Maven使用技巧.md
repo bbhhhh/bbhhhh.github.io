@@ -4,7 +4,7 @@ title:      ApacheMaven使用技巧
 subtitle:   
 date:       2021-12-10
 author:     BHH
-header-img: img/post-bg-coffee.jpg
+header-img: img/post-bg-coffee.jpeg
 catalog: true
 tags:
      - Java
